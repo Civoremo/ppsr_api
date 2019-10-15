@@ -1,0 +1,38 @@
+{
+	"name": "ppsr_api",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"server": "nodemon index.js",
+		"start": "node index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Civoremo/ppsr_api.git"
+	},
+	"keywords": [],
+	"author": "Nedim Omerovic - @civoremo",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Civoremo/ppsr_api/issues"
+	},
+	"homepage": "https://github.com/Civoremo/ppsr_api#readme",
+	"devDependencies": {
+		"nodemon": "^1.19.3"
+	},
+	"dependencies": {
+		"axios": "^0.19.0",
+		"bcryptjs": "^2.4.3",
+		"cors": "^2.8.5",
+		"dotenv": "^8.1.0",
+		"express": "^4.17.1",
+		"helmet": "^3.21.1",
+		"jsonwebtoken": "^8.5.1",
+		"knex": "^0.19.5",
+		"knex-cleaner": "^1.3.0",
+		"morgan": "^1.9.1",
+		"pg": "^7.12.1"
+	}
+}
