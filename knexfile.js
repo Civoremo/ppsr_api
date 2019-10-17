@@ -11,35 +11,35 @@ const localPg = {
 const pg = require("pg");
 pg.defaults.ssl = false;
 
-const dbConnection = process.env.DB_URL;
+const dbConnection = process.env.DATABASE_URL;
 
 module.exports = {
 	development: {
-		// client: "pg",
-		// connection: {
-		// 	host: localPg.host,
-		// 	user: localPg.user,
-		// 	password: localPg.password,
-		// 	database: localPg.database,
-		// 	charset: "utf8",
-		// },
-		// migrations: {
-		// 	directory: __dirname + "/knex/migrations",
-		// },
-		// seeds: {
-		// 	directory: __dirname + "/knex/seeds",
-		// },
-
-		client: "sqlite3",
+		client: "pg",
 		connection: {
-			filename: "./knex/luncher3.db3",
+			host: localPg.host,
+			user: localPg.user,
+			password: localPg.password,
+			database: localPg.database,
+			charset: "utf8",
 		},
 		migrations: {
 			directory: "./knex/migrations",
 		},
 		seeds: {
-			directory: "./knex/migrations",
+			directory: "./knex/seeds",
 		},
+
+		// client: "sqlite3",
+		// connection: {
+		// 	filename: "./knex/ppsr.db3",
+		// },
+		// migrations: {
+		// 	directory: "./knex/migrations",
+		// },
+		// seeds: {
+		// 	directory: "./knex/seeds",
+		// },
 	},
 
 	staging: {
