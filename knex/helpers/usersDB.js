@@ -5,5 +5,5 @@ module.exports = {
 };
 
 function getAllUsers() {
-	return db("users").select("id", "userName", "firstName", "lastName", "email");
+	return db("users").select("id", "firstName", "lastName", "email", "password");
 }
