@@ -5,6 +5,10 @@ const { protected } = require("../middleware/protectedMW.js");
 const userDB = require("../helpers/usersDB.js");
 const router = express.Router();
 
+function getRandomActivationKey(min, max) {
+	Math.floor(Math.random() * (5000 - 1000)) + 1000;
+}
+
 router.get("/all", (req, res) => {
 	userDB
 		.getAllUsers()
@@ -17,8 +21,10 @@ router.get("/all", (req, res) => {
 });
 
 router.get("/user", (req, res) => {
+	const creds = req.body;
+
 	userDB
-		.getUserInfo()
+		.getUserInfo(creds)
 		.then(user => {
 			res.status(200).json(user);
 		})
@@ -29,9 +35,11 @@ router.get("/user", (req, res) => {
 
 router.post("/register", (req, res) => {
 	const creds = req.body;
+
 	if (creds.password) {
 		const hashedPassword = bcrypt.hashSync(creds.password, 14);
 		creds.password = hashedPassword;
+		creds.activationKey = getRandomActivationKey();
 
 		if (creds.firstName && creds.lastName && creds.email) {
 			userDB
@@ -39,6 +47,13 @@ router.post("/register", (req, res) => {
 				.then(id => {
 					console.log(id);
 					res.status(201).json(id);
+
+					userDB.sendConfirmationKey(creds)
+					.then(res => {
+						res.status(200).json({message: "Confirmation sent."})
+					}).catch(err => {
+						res.status(500).json({error: 'Confirmation not sent'})
+					})
 				})
 				.catch(err => {
 					res
@@ -55,30 +70,37 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {
 	const creds = req.body;
+	const 
 
-	userDB
-		.loginUser(creds)
-		.then(user => {
-			if (user && bcrypt.compareSync(creds.password, user.password)) {
-				const token = genToken(user);
-				res.status(200).json({
-					token,
-					user: {
-						id: user.id,
-						firstName: user.firstName,
-						lastName: user.lastName,
-						userRole: user.userRole,
-						email: user.email,
-						password: user.password,
-					},
-				});
-			} else {
-				res.status(401).json({ message: "Invalid login info" });
-			}
-		})
-		.catch(err => {
-			res.status(500).json(err, { error: "Login failed" });
-		});
+	if (creds.activeUser) {
+		userDB
+			.loginUser(creds)
+			.then(user => {
+				if (user && bcrypt.compareSync(creds.password, user.password)) {
+					const token = genToken(user);
+					res.status(200).json({
+						token,
+						user: {
+							id: user.id,
+							firstName: user.firstName,
+							lastName: user.lastName,
+							userRole: user.userRole,
+							email: user.email,
+							password: user.password,
+							activeUser: user.activeUser,
+							activationKey: user.activationKey,
+						},
+					});
+				} else {
+					res.status(401).json({ message: "Invalid login info" });
+				}
+			})
+			.catch(err => {
+				res.status(500).json(err, { error: "Login failed" });
+			});
+	} else {
+		return "User has not been activated!";
+	}
 });
 
 router.delete("/delete", protected, (req, res) => {
@@ -95,6 +117,44 @@ router.delete("/delete", protected, (req, res) => {
 		.catch(err => {
 			res.status(500).json(err, { error: "Failed to delete user" });
 		});
+});
+
+router.put("/update", protected, (req, res) => {
+	const creds = req.body;
+	const hashedPassword = bcrypt.hashSync(creds.password, 14);
+	creds.password = hashedPassword;
+
+	userDB
+		.updateUser(req.decodedToken, creds)
+		.then(id => {
+			res.status(200).json(id);
+		})
+		.catch(err => {
+			res.status(500).json({ err, error: "Failed to update user." });
+		});
+});
+
+router.put("/confirmUser", (req, res) => {
+	const creds = req.body;
+	const hashedPassword = bcrypt.hashSync(creds.password, 14);
+	creds.password = hashedPassword;
+	const foundUser = userDB.getUserInfoToConfirmKey(creds);
+
+	if (!foundUser.activeUser) {
+
+		if (foundUser.activationKey === creds.activationKey) {
+			userDB
+				.updateUser(creds, creds)
+				.then(id => {
+					res.status(200).json(id);
+				})
+				.catch(err => {
+					res.status(500).json({ err, error: "Account activation failed." });
+				});
+		}
+	} else {
+		return "User already activated.";
+	}
 });
 
 module.exports = router;

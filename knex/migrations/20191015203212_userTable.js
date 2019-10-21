@@ -9,6 +9,14 @@ exports.up = function(knex, Promise) {
 			.unique("email")
 			.notNullable();
 		tbl.string("password", 255).notNullable();
+		tbl
+			.boolean("activeUser")
+			.defaultTo(false)
+			.notNullable();
+		tbl
+			.integer("activationKey")
+			.unsigned()
+			.notNullable();
 		tbl.timestamps(true, true);
 	});
 };
