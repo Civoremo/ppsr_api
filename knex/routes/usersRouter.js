@@ -6,7 +6,7 @@ const userDB = require("../helpers/usersDB.js");
 const router = express.Router();
 
 function getRandomActivationKey(min, max) {
-	Math.floor(Math.random() * (5000 - 1000)) + 1000;
+	return Math.floor(Math.random() * (9876 - 1234)) + 1234;
 }
 
 router.get("/all", (req, res) => {
@@ -41,24 +41,29 @@ router.post("/register", (req, res) => {
 		creds.password = hashedPassword;
 		creds.activationKey = getRandomActivationKey();
 
+		// console.log("Random Activation Key:");
+		// console.log(`${creds.activationKey}`);
+
 		if (creds.firstName && creds.lastName && creds.email) {
 			userDB
 				.registerUser(creds)
-				.then(id => {
-					console.log(id);
-					res.status(201).json(id);
+				.then(ids => {
+					// console.log(ids);
+					// res.status(201).json(1);
 
-					userDB.sendConfirmationKey(creds)
-					.then(res => {
-						res.status(200).json({message: "Confirmation sent."})
-					}).catch(err => {
-						res.status(500).json({error: 'Confirmation not sent'})
-					})
+					const sendEmail = userDB
+						.sendConfirmationKey(creds)
+						.then(result => {
+							res.status(201).json({ registered: 1, message: "Confirmation key email sent." });
+						})
+						.catch(err => {
+							res.status(500).json({ error: "Confirmation not sent" });
+						});
 				})
 				.catch(err => {
 					res
 						.status(500)
-						.json(err, { error: "Registration Failed", message: "Email already exists" });
+						.json({ err: err, error: "Registration Failed", message: "Email already exists" });
 				});
 		} else {
 			res.status(500).json({ error: "Missing input fields" });
@@ -70,41 +75,48 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {
 	const creds = req.body;
-	const 
-
-	if (creds.activeUser) {
-		userDB
-			.loginUser(creds)
-			.then(user => {
-				if (user && bcrypt.compareSync(creds.password, user.password)) {
-					const token = genToken(user);
-					res.status(200).json({
-						token,
-						user: {
-							id: user.id,
-							firstName: user.firstName,
-							lastName: user.lastName,
-							userRole: user.userRole,
-							email: user.email,
-							password: user.password,
-							activeUser: user.activeUser,
-							activationKey: user.activationKey,
-						},
+	userDB
+		.getUserInfo(creds)
+		.then(foundUser => {
+			// console.log("USER: ", foundUser[0].activeUser);
+			if (foundUser[0].activeUser === true) {
+				// console.log("active user status is TRUE");
+				userDB
+					.loginUser(creds)
+					.then(user => {
+						if (user && bcrypt.compareSync(creds.password, user.password)) {
+							const token = genToken(user);
+							res.status(200).json({
+								token,
+								user: {
+									id: user.id,
+									firstName: user.firstName,
+									lastName: user.lastName,
+									userRole: user.userRole,
+									email: user.email,
+									password: user.password,
+									activeUser: user.activeUser,
+									activationKey: user.activationKey,
+								},
+							});
+						} else {
+							res.status(401).json({ message: "Invalid login info" });
+						}
+					})
+					.catch(err => {
+						res.status(500).json(err, { error: "Login failed" });
 					});
-				} else {
-					res.status(401).json({ message: "Invalid login info" });
-				}
-			})
-			.catch(err => {
-				res.status(500).json(err, { error: "Login failed" });
-			});
-	} else {
-		return "User has not been activated!";
-	}
+			} else {
+				res.status(500).json({ Error: "User has not been confirmed." });
+			}
+		})
+		.catch(err => {
+			res.status(500).json({ error: "Something went wrong during Login." });
+		});
 });
 
 router.delete("/delete", protected, (req, res) => {
-	console.log(req.decodedToken);
+	// console.log(req.decodedToken);
 	userDB
 		.deleteUser(req.decodedToken)
 		.then(count => {
@@ -121,8 +133,8 @@ router.delete("/delete", protected, (req, res) => {
 
 router.put("/update", protected, (req, res) => {
 	const creds = req.body;
-	const hashedPassword = bcrypt.hashSync(creds.password, 14);
-	creds.password = hashedPassword;
+	// const hashedPassword = bcrypt.hashSync(creds.password, 14);
+	// creds.password = hashedPassword;
 
 	userDB
 		.updateUser(req.decodedToken, creds)
@@ -136,25 +148,31 @@ router.put("/update", protected, (req, res) => {
 
 router.put("/confirmUser", (req, res) => {
 	const creds = req.body;
-	const hashedPassword = bcrypt.hashSync(creds.password, 14);
-	creds.password = hashedPassword;
-	const foundUser = userDB.getUserInfoToConfirmKey(creds);
-
-	if (!foundUser.activeUser) {
-
-		if (foundUser.activationKey === creds.activationKey) {
-			userDB
-				.updateUser(creds, creds)
-				.then(id => {
-					res.status(200).json(id);
-				})
-				.catch(err => {
-					res.status(500).json({ err, error: "Account activation failed." });
-				});
-		}
-	} else {
-		return "User already activated.";
-	}
+	// const hashedPassword = bcrypt.hashSync(creds.password, 14);
+	// creds.password = hashedPassword;
+	userDB
+		.getUserInfoToConfirmKey(creds)
+		.then(foundUser => {
+			if (!foundUser[0].activeUser) {
+				if (foundUser[0].activationKey === creds.activationKey) {
+					userDB
+						.confirmUser(creds, creds)
+						.then(id => {
+							res.status(200).json(id);
+						})
+						.catch(err => {
+							res.status(500).json({ err, error: "Account activation failed." });
+						});
+				} else {
+					res.status(500).json({ error: "Incorrect Activation Key." });
+				}
+			} else {
+				res.status(500).json({ message: "User is already actived." });
+			}
+		})
+		.catch(err => {
+			res.status(500).json({ error: "Could not find user." });
+		});
 });
 
 module.exports = router;

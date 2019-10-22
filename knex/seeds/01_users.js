@@ -13,6 +13,8 @@ exports.seed = function(knex, Promise) {
 					userRole: "user",
 					email: "netkotest@test.com",
 					password: bcrypt.hashSync("testPassword", 14),
+					activeUser: true,
+					activationKey: 1234,
 				},
 				{
 					firstName: "Ajla",
@@ -20,6 +22,8 @@ exports.seed = function(knex, Promise) {
 					userRole: "user",
 					email: "ajlatest@test.com",
 					password: bcrypt.hashSync("testPassword", 14),
+					activeUser: true,
+					activationKey: 1234,
 				},
 				{
 					firstName: "Merima",
@@ -27,6 +31,8 @@ exports.seed = function(knex, Promise) {
 					userRole: "user",
 					email: "merimatest@test.com",
 					password: bcrypt.hashSync("testPassword", 14),
+					activeUser: true,
+					activationKey: 1234,
 				},
 				{
 					firstName: "Sajo",
@@ -34,6 +40,8 @@ exports.seed = function(knex, Promise) {
 					userRole: "user",
 					email: "sajotest@test.com",
 					password: bcrypt.hashSync("testPassword", 14),
+					// activeUser: fals,
+					activationKey: 1234,
 				},
 				{
 					firstName: "Tania",
@@ -41,6 +49,8 @@ exports.seed = function(knex, Promise) {
 					userRole: "admini",
 					email: "taniatest@test.com",
 					password: bcrypt.hashSync("testPassword", 14),
+					activeUser: true,
+					activationKey: 1234,
 				},
 			]);
 		});

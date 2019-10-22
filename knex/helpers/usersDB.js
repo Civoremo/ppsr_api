@@ -1,4 +1,5 @@
 const db = require("../knex.js");
+const { sgMail } = require("../../configMW/configMW.js");
 
 module.exports = {
 	getAllUsers,
@@ -76,4 +77,18 @@ function confirmUser(user) {
 
 function sendConfirmationKey(user) {
 	// sendgrid code goes here
+	sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+	const msg = {
+		to: `${user.email}`,
+		from: `ppsr@ppscreens.com`,
+		subject: "PPSR Confirmation Key",
+		html: `Thank you for registering with Pool & Patio Screen Repair website.<br>
+		If this email was not meant for you, please ignore its contents and delete.<br><br>
+		Your Confirmation Number:<br>
+		<strong>${user.activationKey}</strong>
+		`,
+	};
+
+	return sgMail.send(msg);
 }

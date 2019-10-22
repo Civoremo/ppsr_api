@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const sgMail = require("@sendgrid/mail");
 
 module.exports = {
 	cors,
@@ -12,4 +13,5 @@ module.exports = {
 	express,
 	bcrypt,
 	jwt,
+	sgMail,
 };
