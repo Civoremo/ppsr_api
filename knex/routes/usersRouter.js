@@ -16,7 +16,7 @@ router.get("/all", (req, res) => {
 			res.status(200).json(users);
 		})
 		.catch(err => {
-			res.status(500).json(err, { error: "Failed to load users" });
+			res.status(500).json(err, { message: "Failed to load users" });
 		});
 });
 
@@ -29,7 +29,7 @@ router.get("/user", (req, res) => {
 			res.status(200).json(user);
 		})
 		.catch(err => {
-			res.status(500).json(err, { error: "Failed to load user info" });
+			res.status(500).json(err, { message: "Failed to load user info" });
 		});
 });
 
@@ -58,19 +58,17 @@ router.post("/register", (req, res) => {
 							res.status(201).json({ registered: 1, message: "Confirmation key email sent." });
 						})
 						.catch(err => {
-							res.status(450).json({ err, error: "Confirmation not sent" });
+							res.status(450).json(err, { message: "Confirmation not sent" });
 						});
 				})
 				.catch(err => {
-					res
-						.status(455)
-						.json({ err: err, error: "Registration Failed", message: "Email already exists" });
+					res.status(500).json(err, { message: "Registration Failed; email already exists" });
 				});
 		} else {
-			res.status(460).json({ error: "Missing input fields" });
+			res.status(500).json({ message: "Missing input fields" });
 		}
 	} else {
-		res.status(465).json(err, { message: "Password required" });
+		res.status(500).json(err, { message: "Password required" });
 	}
 });
 
@@ -101,18 +99,18 @@ router.post("/login", (req, res) => {
 								},
 							});
 						} else {
-							res.status(401).json({ message: "Invalid login info" });
+							res.status(404).json({ message: "Invalid login info" });
 						}
 					})
 					.catch(err => {
-						res.status(412).json(err, { error: "Login failed" });
+						res.status(500).json(err, { message: "Login failed" });
 					});
 			} else {
-				res.status(413).json({ Error: "User has not been confirmed." });
+				res.status(500).json({ message: "User has not been confirmed." });
 			}
 		})
 		.catch(err => {
-			res.status(414).json({ error: "Something went wrong during Login." });
+			res.status(500).json({ message: "Something went wrong during Login." });
 		});
 });
 
@@ -128,7 +126,7 @@ router.delete("/delete", protected, (req, res) => {
 			}
 		})
 		.catch(err => {
-			res.status(500).json(err, { error: "Failed to delete user" });
+			res.status(500).json(err, { message: "Failed to delete user" });
 		});
 });
 
@@ -143,7 +141,7 @@ router.put("/update", protected, (req, res) => {
 			res.status(200).json(id);
 		})
 		.catch(err => {
-			res.status(500).json({ err, error: "Failed to update user." });
+			res.status(500).json(err, { message: "Failed to update user." });
 		});
 });
 
@@ -162,17 +160,17 @@ router.put("/confirmUser", (req, res) => {
 							res.status(200).json(id);
 						})
 						.catch(err => {
-							res.status(500).json({ err, error: "Account activation failed." });
+							res.status(500).json(err, { message: "Account activation failed." });
 						});
 				} else {
-					res.status(500).json({ error: "Incorrect Activation Key." });
+					res.status(500).json({ message: "Incorrect Activation Key." });
 				}
 			} else {
 				res.status(500).json({ message: "User is already actived." });
 			}
 		})
 		.catch(err => {
-			res.status(500).json({ error: "Could not find user." });
+			res.status(500).json({ message: "Could not find user." });
 		});
 });
 
