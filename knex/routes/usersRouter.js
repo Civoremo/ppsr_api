@@ -70,7 +70,7 @@ router.post("/register", (req, res) => {
 			res.status(460).json({ error: "Missing input fields" });
 		}
 	} else {
-		res.status(465).json({ err, message: "Password required" });
+		res.status(465).json(err, { message: "Password required" });
 	}
 });
 
