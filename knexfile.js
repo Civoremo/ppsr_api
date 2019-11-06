@@ -9,7 +9,7 @@ const localPg = {
 };
 
 const pg = require("pg");
-pg.defaults.ssl = false;
+pg.defaults.ssl = true;
 
 const dbConnection = process.env.DATABASE_URL;
 
