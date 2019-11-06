@@ -104,14 +104,14 @@ router.post("/login", (req, res) => {
 						}
 					})
 					.catch(err => {
-						res.status(500).json(err, { error: "Login failed" });
+						res.status(412).json(err, { error: "Login failed" });
 					});
 			} else {
-				res.status(500).json({ Error: "User has not been confirmed." });
+				res.status(413).json({ Error: "User has not been confirmed." });
 			}
 		})
 		.catch(err => {
-			res.status(500).json({ error: "Something went wrong during Login." });
+			res.status(414).json({ error: "Something went wrong during Login." });
 		});
 });
 
