@@ -15,8 +15,8 @@ const server = express();
 server.use(helmet());
 server.use(morgan("short"));
 server.use(express.json());
-server.use(cors(corsOptions));
-server.options("*", cors());
+server.use(cors());
+// server.options("*", cors());
 
 // set up routes here
 server.use("/users", usersRoute);
