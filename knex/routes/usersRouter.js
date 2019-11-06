@@ -54,6 +54,7 @@ router.post("/register", (req, res) => {
 					const sendEmail = userDB
 						.sendConfirmationKey(creds)
 						.then(result => {
+							console.log(result);
 							res.status(201).json({ registered: 1, message: "Confirmation key email sent." });
 						})
 						.catch(err => {
