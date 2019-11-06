@@ -57,7 +57,7 @@ router.post("/register", (req, res) => {
 							res.status(201).json({ registered: 1, message: "Confirmation key email sent." });
 						})
 						.catch(err => {
-							res.status(500).json({ error: "Confirmation not sent" });
+							res.status(500).json({ err, error: "Confirmation not sent" });
 						});
 				})
 				.catch(err => {
@@ -69,7 +69,7 @@ router.post("/register", (req, res) => {
 			res.status(500).json({ error: "Missing input fields" });
 		}
 	} else {
-		res.status(500).json({err, message: "Password required" });
+		res.status(500).json({ err, message: "Password required" });
 	}
 });
 
