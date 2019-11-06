@@ -7,16 +7,16 @@ const usersRoute = require("../knex/routes/usersRouter.js");
 
 const server = express();
 
-const corsOptions = {
-	origin: "https://ppsr-api.herokuapp.com",
-	optionsSuccessStatus: 200,
-};
+// const corsOptions = {
+// 	origin: "https://ppsr-api.herokuapp.com",
+// 	optionsSuccessStatus: 200,
+// };
 
 server.use(helmet());
 server.use(morgan("short"));
 server.use(express.json());
 server.use(cors(corsOptions));
-// server.options("*", cors());
+server.options("*", cors());
 
 // set up routes here
 server.use("/users", usersRoute);
