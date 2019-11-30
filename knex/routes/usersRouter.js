@@ -193,13 +193,36 @@ router.post("/recaptchaPPSR", (req, res) => {
 	const info = req.body;
 	console.log("recaptcha post body: " + info);
 
-	userDB
-		.recatpchaRequest(info)
-		.then(response => {
-			res.status(200).json(response, { recaptchaRequest: 1 });
+	// userDB
+	// 	.recatpchaRequest(info)
+	// 	.then(response => {
+	// 		res.status(200).json(response, { recaptchaRequest: 1 });
+	// 	})
+	// 	.catch(err => {
+	// 		res.status(500).json(err, { recaptchaRequest: 0 });
+	// 	});
+	fetch("https://www.google.com/recaptcha/api/siteverify", {
+		method: "POST",
+		// mode: 'no-cors',
+		// headers: {
+		//   'Content-Type': 'application/x-www-form-urlencoded'
+		// },
+		// headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+		body: JSON.stringify({
+			secret: `${process.env.REACT_APP_CAPTCHASECRET}`,
+			response: `${info.response}`,
+			// remoteip: 'localhost'
+		}),
+	})
+		.then(res => {
+			console.log(res);
+			// return res;
+			res.status(200).json(res, { reCaptchaResponse: 1 });
 		})
 		.catch(err => {
-			res.status(500).json(err, { recaptchaRequest: 0 });
+			console.log("error " + err);
+			// return err;
+			res.status(500).json(err, { reCaptchaResponse: 0 });
 		});
 });
 
