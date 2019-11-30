@@ -189,7 +189,7 @@ router.get("/estimate", (req, res) => {
 		});
 });
 
-router.get("/recaptchaPPSR", (req, res) => {
+router.post("/recaptchaPPSR", (req, res) => {
 	const info = req.body;
 	console.log("recaptcha post body: " + info);
 
