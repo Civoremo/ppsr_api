@@ -5,6 +5,8 @@ const { protected } = require("../middleware/protectedMW.js");
 const userDB = require("../helpers/usersDB.js");
 const router = express.Router();
 
+const axios = require("axios");
+
 function getRandomActivationKey(min, max) {
 	return Math.floor(Math.random() * (9876 - 1234)) + 1234;
 }
@@ -178,6 +180,7 @@ router.put("/confirmUser", (req, res) => {
 
 router.get("/estimate", (req, res) => {
 	const info = req.body;
+	console.log(info);
 
 	userDB
 		.sendEstimateRequest(info)
@@ -191,7 +194,7 @@ router.get("/estimate", (req, res) => {
 
 router.post("/recaptchaPPSR", (req, res) => {
 	const info = req.body;
-	console.log("recaptcha post body: " + info);
+	console.log("recaptcha post body: " + info.response);
 
 	// userDB
 	// 	.recatpchaRequest(info)
@@ -201,28 +204,43 @@ router.post("/recaptchaPPSR", (req, res) => {
 	// 	.catch(err => {
 	// 		res.status(500).json(err, { recaptchaRequest: 0 });
 	// 	});
-	fetch("https://www.google.com/recaptcha/api/siteverify", {
-		method: "POST",
-		// mode: 'no-cors',
-		// headers: {
-		//   'Content-Type': 'application/x-www-form-urlencoded'
-		// },
-		// headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-		body: JSON.stringify({
+	// fetch("https://www.google.com/recaptcha/api/siteverify", {
+	// 	method: "POST",
+	// 	// mode: 'no-cors',
+	// 	// headers: {
+	// 	//   'Content-Type': 'application/x-www-form-urlencoded'
+	// 	// },
+	// 	// headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+	// 	body: JSON.stringify({
+	// 		secret: `${process.env.REACT_APP_CAPTCHASECRET}`,
+	// 		response: `${info.response}`,
+	// 		// remoteip: 'localhost'
+	// 	}),
+	// })
+	// 	.then(res => {
+	// 		console.log(res);
+	// 		// return res;
+	// 		res.status(200).json(res, { reCaptchaResponse: 1 });
+	// 	})
+	// 	.catch(err => {
+	// 		console.log("error " + err);
+	// 		// return err;
+	// 		res.status(500).json(err, { reCaptchaResponse: 0 });
+	// 	});
+
+	axios({
+		method: "post",
+		url: "https://www.google.com/recaptcha/api/siteverify",
+		data: {
 			secret: `${process.env.REACT_APP_CAPTCHASECRET}`,
 			response: `${info.response}`,
-			// remoteip: 'localhost'
-		}),
+		},
 	})
 		.then(res => {
-			console.log(res);
-			// return res;
-			res.status(200).json(res, { reCaptchaResponse: 1 });
+			res.status(200).json({ result: res, request: "sent" });
 		})
 		.catch(err => {
-			console.log("error " + err);
-			// return err;
-			res.status(500).json(err, { reCaptchaResponse: 0 });
+			res.status(500).json({ error: err, request: "failed" });
 		});
 });
 
