@@ -58,17 +58,19 @@ router.post("/register", (req, res) => {
 							res.status(201).json({ registered: 1, message: "Confirmation key email sent." });
 						})
 						.catch(err => {
-							res.status(450).json(err, { message: "Confirmation not sent" });
+							res.status(450).json(err, { registered: 0, message: "Confirmation not sent" });
 						});
 				})
 				.catch(err => {
-					res.status(500).json(err, { message: "Registration Failed; email already exists" });
+					res
+						.status(500)
+						.json(err, { registered: 2, message: "Registration Failed; email already exists" });
 				});
 		} else {
-			res.status(500).json({ message: "Missing input fields" });
+			res.status(500).json({ registered: 3, message: "Missing input fields" });
 		}
 	} else {
-		res.status(500).json(err, { message: "Password required" });
+		res.status(500).json(err, { registered: 4, message: "Password required" });
 	}
 });
 
@@ -99,18 +101,18 @@ router.post("/login", (req, res) => {
 								},
 							});
 						} else {
-							res.status(404).json({ message: "Invalid login info" });
+							res.status(404).json({ login: 1, message: "Invalid login info" });
 						}
 					})
 					.catch(err => {
-						res.status(500).json(err, { message: "Login failed" });
+						res.status(500).json(err, { login: 0, message: "Login failed" });
 					});
 			} else {
-				res.status(500).json({ message: "User has not been confirmed." });
+				res.status(500).json({ login: 3, message: "User has not been confirmed." });
 			}
 		})
 		.catch(err => {
-			res.status(500).json({ message: "Something went wrong during Login." });
+			res.status(500).json({ login: 4, message: "Something went wrong during Login." });
 		});
 });
 
@@ -120,13 +122,13 @@ router.delete("/delete", protected, (req, res) => {
 		.deleteUser(req.decodedToken)
 		.then(count => {
 			if (count === 1) {
-				res.status(200).json(count);
+				res.status(200).json(count, { delted: 1 });
 			} else {
-				res.status(404).json(count, { message: " - User failed to delete" });
+				res.status(404).json(count, { deleted: 0, message: " - User failed to delete" });
 			}
 		})
 		.catch(err => {
-			res.status(500).json(err, { message: "Failed to delete user" });
+			res.status(500).json(err, { delted: 2, message: "Failed to delete user" });
 		});
 });
 
@@ -138,10 +140,10 @@ router.put("/update", protected, (req, res) => {
 	userDB
 		.updateUser(req.decodedToken, creds)
 		.then(id => {
-			res.status(200).json(id);
+			res.status(200).json(id, { updated: 1 });
 		})
 		.catch(err => {
-			res.status(500).json(err, { message: "Failed to update user." });
+			res.status(500).json(err, { updated: 0, message: "Failed to update user." });
 		});
 });
 
@@ -157,20 +159,46 @@ router.put("/confirmUser", (req, res) => {
 					userDB
 						.confirmUser(creds, creds)
 						.then(id => {
-							res.status(200).json(id);
+							res.status(200).json(id, { activeted: 1 });
 						})
 						.catch(err => {
-							res.status(500).json(err, { message: "Account activation failed." });
+							res.status(500).json(err, { activated: 0, message: "Account activation failed." });
 						});
 				} else {
-					res.status(500).json({ message: "Incorrect Activation Key." });
+					res.status(500).json({ activated: 2, message: "Incorrect Activation Key." });
 				}
 			} else {
-				res.status(500).json({ message: "User is already actived." });
+				res.status(500).json({ activated: 3, message: "User is already actived." });
 			}
 		})
 		.catch(err => {
-			res.status(500).json({ message: "Could not find user." });
+			res.status(500).json({ activated: 4, message: "Could not find user." });
+		});
+});
+
+router.get("/estimate", (req, res) => {
+	const info = req.body;
+
+	userDB
+		.sendEstimateRequest(info)
+		.then(response => {
+			res.status(200).json(response, { estimateSent: 1 });
+		})
+		.catch(err => {
+			res.status(500).json(err, { estimateSent: 0 });
+		});
+});
+
+router.get("/recaptchaPPSR", (req, res) => {
+	const info = req.body;
+
+	userDB
+		.recatpchaRequest(info)
+		.then(response => {
+			res.status(200).json(response, { recaptchaRequest: 1 });
+		})
+		.catch(err => {
+			res.status(500).json(err, { recaptchaRequest: 0 });
 		});
 });
 

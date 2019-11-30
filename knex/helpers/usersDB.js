@@ -11,6 +11,8 @@ module.exports = {
 	confirmUser,
 	getUserInfoToConfirmKey,
 	sendConfirmationKey,
+	sendEstimateRequest,
+	recatpchaRequest,
 };
 
 function getAllUsers() {
@@ -43,9 +45,9 @@ function getUserInfo(user) {
 			"firstName",
 			"lastName",
 			"userRole",
-			"email",
-			"password",
-			"activeUser"
+			"email"
+			// "password",
+			// "activeUser"
 			// "activationKey"
 		)
 		.where({ email: user.email });
@@ -91,4 +93,68 @@ function sendConfirmationKey(user) {
 	};
 
 	return sgMail.send(msg);
+}
+
+function sendEstimateRequest(info) {
+	const templateParams = {
+		from_name: info.senderFirstName + " " + info.senderLastName + " ( " + info.senderEmail + " ) ",
+		from_email: info.senderEmail,
+		to_name: "PPSR",
+		subject: "PPSR Contact Form",
+		message_html: {
+			customer: `Customer: ${info.senderFirstName} ${info.senderLastName}`,
+			phone: `Phone: ${info.senderPhone}`,
+			email: `Email: ${info.senderEmail}`,
+
+			address: `Address:`,
+			street: `${info.senderStreet}`,
+			cityStateZip: `${info.senderCity}, ${info.senderState}, ${info.senderZipcode}`,
+
+			gateCode: `Gate Code: ${info.senderGateCode}`,
+
+			services: `Services:`,
+			complete: `Complete Re-Screen: ${info.senderServices.complete}`,
+			individual: `Individual Panels: ${info.senderServices.individual}`,
+			window: `Window Screens: ${info.senderServices.window}`,
+			lanai: `New Lanai Insert: ${info.senderServices.lanai}`,
+			entry: `New Entry Way Insert: ${info.senderServices.entry}`,
+			washing: `Pressure Washing: ${info.senderServices.washing}`,
+			gutter: `Gutter Cleaning: ${info.senderServices.gutter}`,
+			misc: `Misc. Repairs: ${info.senderServices.misc}`,
+
+			message: `Message:`,
+			details: `${info.senderMessage}`,
+		},
+	};
+
+	return emailjs.send(
+		process.env.REACT_APP_EMAILJS_SERVICEID,
+		process.env.REACT_APP_EMAILJS_TEMPLATE,
+		templateParams,
+		process.env.REACT_APP_EMAILJS_USER
+	);
+}
+
+function recatpchaRequest(info) {
+	fetch("https://www.google.com/recaptcha/api/siteverify", {
+		method: "POST",
+		// mode: 'no-cors',
+		// headers: {
+		//   'Content-Type': 'application/x-www-form-urlencoded'
+		// },
+		// headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+		body: JSON.stringify({
+			secret: `${process.env.REACT_APP_CAPTCHASECRET}`,
+			response: `${info.response}`,
+			// remoteip: 'localhost'
+		}),
+	})
+		.then(res => {
+			console.log(res);
+			return res;
+		})
+		.catch(err => {
+			console.log("error " + err);
+			return err;
+		});
 }
