@@ -191,6 +191,7 @@ router.get("/estimate", (req, res) => {
 
 router.post("/recaptchaPPSR", (req, res) => {
 	const info = req.body;
+	console.log("recaptcha post body: " + info);
 
 	userDB
 		.recatpchaRequest(info)

@@ -136,6 +136,7 @@ function sendEstimateRequest(info) {
 }
 
 function recatpchaRequest(info) {
+	console.log("We have made it to the server function");
 	fetch("https://www.google.com/recaptcha/api/siteverify", {
 		method: "POST",
 		// mode: 'no-cors',
