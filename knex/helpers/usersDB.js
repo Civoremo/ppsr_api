@@ -1,5 +1,5 @@
 const db = require("../knex.js");
-const { sgMail } = require("../../configMW/configMW.js");
+const { sgMail, emailjs } = require("../../configMW/configMW.js");
 
 module.exports = {
 	getAllUsers,
@@ -96,34 +96,51 @@ function sendConfirmationKey(user) {
 }
 
 function sendEstimateRequest(info) {
+	console.log("estimaet request: " + info);
+	console.log("complete " + JSON.stringify(info.senderServices.complete));
 	const templateParams = {
-		from_name: info.senderFirstName + " " + info.senderLastName + " ( " + info.senderEmail + " ) ",
-		from_email: info.senderEmail,
+		from_name:
+			JSON.stringify(info.senderFirstName) +
+			" " +
+			JSON.stringify(info.senderLastName) +
+			" ( " +
+			JSON.stringify(info.senderEmail) +
+			" ) ",
+		from_email: JSON.stringify(info.senderEmail),
 		to_name: "PPSR",
 		subject: "PPSR Contact Form",
 		message_html: {
-			customer: `Customer: ${info.senderFirstName} ${info.senderLastName}`,
-			phone: `Phone: ${info.senderPhone}`,
-			email: `Email: ${info.senderEmail}`,
+			customer:
+				`Customer: ` +
+				JSON.stringify(info.senderFirstName) +
+				" " +
+				JSON.stringify(info.senderLastName),
+			phone: `Phone: ` + JSON.stringify(info.senderPhone),
+			email: `Email: ` + JSON.stringify(info.senderEmail),
 
 			address: `Address:`,
-			street: `${info.senderStreet}`,
-			cityStateZip: `${info.senderCity}, ${info.senderState}, ${info.senderZipcode}`,
+			street: JSON.stringify(info.senderStreet),
+			cityStateZip:
+				JSON.stringify(info.senderCity) +
+				", " +
+				JSON.stringify(info.senderState) +
+				", " +
+				JSON.stringify(info.senderZipcode),
 
-			gateCode: `Gate Code: ${info.senderGateCode}`,
+			gateCode: `Gate Code: ` + JSON.stringify(info.senderGateCode),
 
 			services: `Services:`,
-			complete: `Complete Re-Screen: ${info.senderServices.complete}`,
-			individual: `Individual Panels: ${info.senderServices.individual}`,
-			window: `Window Screens: ${info.senderServices.window}`,
-			lanai: `New Lanai Insert: ${info.senderServices.lanai}`,
-			entry: `New Entry Way Insert: ${info.senderServices.entry}`,
-			washing: `Pressure Washing: ${info.senderServices.washing}`,
-			gutter: `Gutter Cleaning: ${info.senderServices.gutter}`,
-			misc: `Misc. Repairs: ${info.senderServices.misc}`,
+			complete: `Complete Re-Screen: ` + JSON.stringify(info.senderServices.complete),
+			individual: `Individual Panels: ` + JSON.stringify(info.senderServices.individual),
+			window: `Window Screens: ` + JSON.stringify(info.senderServices.window),
+			lanai: `New Lanai Insert: ` + JSON.stringify(info.senderServices.lanai),
+			entry: `New Entry Way Insert: ` + JSON.stringify(info.senderServices.entry),
+			washing: `Pressure Washing: ` + JSON.stringify(info.senderServices.washing),
+			gutter: `Gutter Cleaning: ` + JSON.stringify(info.senderServices.gutter),
+			misc: `Misc. Repairs: ` + JSON.stringify(info.senderServices.misc),
 
 			message: `Message:`,
-			details: `${info.senderMessage}`,
+			details: JSON.stringify(info.senderMessage),
 		},
 	};
 

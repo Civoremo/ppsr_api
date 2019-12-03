@@ -178,9 +178,9 @@ router.put("/confirmUser", (req, res) => {
 		});
 });
 
-router.get("/estimate", (req, res) => {
+router.post("/estimate", (req, res) => {
 	const info = req.body;
-	console.log(info);
+	console.log("estimate: " + JSON.stringify(info));
 
 	userDB
 		.sendEstimateRequest(info)
@@ -192,9 +192,10 @@ router.get("/estimate", (req, res) => {
 		});
 });
 
-router.post("/recaptchaPPSR", (req, res) => {
+router.get("/recaptchaPPSR", (req, res) => {
 	const info = req.body;
-	console.log("recaptcha post body: " + info.response);
+	console.log("REQ " + JSON.stringify(info));
+	console.log("recaptcha post body: " + `${info.response}`);
 
 	// userDB
 	// 	.recatpchaRequest(info)
@@ -231,15 +232,17 @@ router.post("/recaptchaPPSR", (req, res) => {
 	axios({
 		method: "post",
 		url: "https://www.google.com/recaptcha/api/siteverify",
-		data: {
+		body: JSON.stringify({
 			secret: `${process.env.REACT_APP_CAPTCHASECRET}`,
 			response: `${info.response}`,
-		},
+		}),
 	})
 		.then(res => {
+			console.log("success " + JSON.stringify(res));
 			res.status(200).json({ result: res, request: "sent" });
 		})
 		.catch(err => {
+			console.log("failed " + JSON.stringify(err));
 			res.status(500).json({ error: err, request: "failed" });
 		});
 });
