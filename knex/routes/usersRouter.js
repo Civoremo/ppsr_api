@@ -48,31 +48,45 @@ router.post("/register", (req, res) => {
 
 		if (creds.firstName && creds.lastName && creds.email) {
 			userDB
-				.registerUser(creds)
-				.then(ids => {
-					// console.log(ids);
-					// res.status(201).json(1);
-
-					const sendEmail = userDB
-						.sendConfirmationKey(creds)
-						.then(result => {
-							console.log(result);
-							res.status(201).json({ registered: 1, message: "Confirmation key email sent." });
-						})
-						.catch(err => {
-							res.status(450).json(err, { registered: 0, message: "Confirmation not sent" });
-						});
+				.getUserInfo(creds)
+				.then(foundUser => {
+					console.log(foundUser[0]);
+					if (foundUser[0].email === creds.email) {
+						console.log("user already exists");
+						res.status(210).json({ registered: 2, message: "Email already exists." });
+					}
 				})
 				.catch(err => {
-					res
-						.status(500)
-						.json(err, { registered: 2, message: "Registration Failed; email already exists" });
+					console.log("new user registering");
+					userDB
+						.registerUser(creds)
+						.then(ids => {
+							// console.log(ids);
+							// res.status(201).json(1);
+
+							const sendEmail = userDB
+								.sendConfirmationKey(creds)
+								.then(result => {
+									console.log(result);
+									res.status(201).json({
+										confirmation: 1,
+										message: "Check your inbox for the confirmation key.",
+									});
+								})
+								.catch(err => {
+									res.status(450).json({ err, confirmation: 0, message: "Confirmation not sent" });
+								});
+						})
+						.catch(err => {
+							res.status(500).json({ err, registered: 3, message: "Registration Failed." });
+						});
+					// res.status(500).json({ err, message: "user was not found" });
 				});
 		} else {
-			res.status(500).json({ registered: 3, message: "Missing input fields" });
+			res.status(500).json({ registered: 4, message: "Missing input fields" });
 		}
 	} else {
-		res.status(500).json(err, { registered: 4, message: "Password required" });
+		res.status(500).json({ err, registered: 5, message: "Password required" });
 	}
 });
 
@@ -90,6 +104,7 @@ router.post("/login", (req, res) => {
 						if (user && bcrypt.compareSync(creds.password, user.password)) {
 							const token = genToken(user);
 							res.status(200).json({
+								login: 1,
 								token,
 								user: {
 									id: user.id,
@@ -103,18 +118,48 @@ router.post("/login", (req, res) => {
 								},
 							});
 						} else {
-							res.status(404).json({ login: 1, message: "Invalid login info" });
+							res.status(404).json({ login: 2, message: "Invalid login info" });
 						}
 					})
 					.catch(err => {
-						res.status(500).json(err, { login: 0, message: "Login failed" });
+						res.status(500).json({ err, login: 0, message: "Login failed" });
 					});
 			} else {
-				res.status(500).json({ login: 3, message: "User has not been confirmed." });
+				// res.status(210).json({
+				// 	login: 3,
+				// 	alert: "User has not been confirmed.",
+				// 	message: "A confirmation key has been sent to your inbox.",
+				// });
+
+				userDB
+					.getUserInfo(creds)
+					.then(foundUser => {
+						creds.activationKey = foundUser[0].activationKey;
+
+						const sendEmail = userDB
+							.sendConfirmationKey(creds)
+							.then(result => {
+								// console.log(result);
+								res.status(210).json({
+									result: result,
+									confirmation: 1,
+									alert: "Email has not been confirmed yet.",
+									message: "A confirmation key has been sent to your inbox.",
+								});
+							})
+							.catch(err => {
+								res.status(210).json({ err, confirmation: 0, message: "Confirmation not sent" });
+							});
+					})
+					.catch(err => {
+						res
+							.status(210)
+							.json({ err, message: "Something went wrong, trying to send confirmation key." });
+					});
 			}
 		})
 		.catch(err => {
-			res.status(500).json({ login: 4, message: "Something went wrong during Login." });
+			res.status(500).json({ login: 4, message: "Email could not be found." });
 		});
 });
 
@@ -124,13 +169,13 @@ router.delete("/delete", protected, (req, res) => {
 		.deleteUser(req.decodedToken)
 		.then(count => {
 			if (count === 1) {
-				res.status(200).json(count, { delted: 1 });
+				res.status(200).json({ count, delted: 1 });
 			} else {
-				res.status(404).json(count, { deleted: 0, message: " - User failed to delete" });
+				res.status(404).json({ count, deleted: 0, message: " - User failed to delete" });
 			}
 		})
 		.catch(err => {
-			res.status(500).json(err, { delted: 2, message: "Failed to delete user" });
+			res.status(500).json({ count, delted: 2, message: "Failed to delete user" });
 		});
 });
 
@@ -142,10 +187,10 @@ router.put("/update", protected, (req, res) => {
 	userDB
 		.updateUser(req.decodedToken, creds)
 		.then(id => {
-			res.status(200).json(id, { updated: 1 });
+			res.status(200).json({ id, updated: 1 });
 		})
 		.catch(err => {
-			res.status(500).json(err, { updated: 0, message: "Failed to update user." });
+			res.status(500).json({ err, updated: 0, message: "Failed to update user." });
 		});
 });
 
@@ -161,10 +206,10 @@ router.put("/confirmUser", (req, res) => {
 					userDB
 						.confirmUser(creds, creds)
 						.then(id => {
-							res.status(200).json(id, { activeted: 1 });
+							res.status(200).json({ id, activeted: 1 });
 						})
 						.catch(err => {
-							res.status(500).json(err, { activated: 0, message: "Account activation failed." });
+							res.status(500).json({ err, activated: 0, message: "Account activation failed." });
 						});
 				} else {
 					res.status(500).json({ activated: 2, message: "Incorrect Activation Key." });
@@ -185,10 +230,10 @@ router.post("/estimate", (req, res) => {
 	userDB
 		.sendEstimateRequest(info)
 		.then(response => {
-			res.status(200).json(response, { estimateSent: 1 });
+			res.status(200).json({ response, estimateSent: 1 });
 		})
 		.catch(err => {
-			res.status(500).json(err, { estimateSent: 0 });
+			res.status(500).json({ err, estimateSent: 0 });
 		});
 });
 

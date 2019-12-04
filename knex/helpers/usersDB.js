@@ -47,8 +47,8 @@ function getUserInfo(user) {
 			"userRole",
 			"email",
 			// "password",
-			"activeUser"
-			// "activationKey"
+			"activeUser",
+			"activationKey"
 		)
 		.where({ email: user.email });
 }
