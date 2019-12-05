@@ -159,7 +159,7 @@ router.post("/login", (req, res) => {
 			}
 		})
 		.catch(err => {
-			res.status(500).json({ login: 4, message: "Email could not be found." });
+			res.status(210).json({ login: 4, message: "Email could not be found." });
 		});
 });
 
@@ -187,10 +187,10 @@ router.put("/update", protected, (req, res) => {
 	userDB
 		.updateUser(req.decodedToken, creds)
 		.then(id => {
-			res.status(200).json({ id, updated: 1 });
+			res.status(200).json({ id, updated: 1, message: "Update successfull." });
 		})
 		.catch(err => {
-			res.status(500).json({ err, updated: 0, message: "Failed to update user." });
+			res.status(210).json({ err, updated: 0, message: "Failed to update user." });
 		});
 });
 
