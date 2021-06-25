@@ -1,7 +1,8 @@
 const db = require('../knex.js');
 
 module.exports = {
-	getAllCages
+	getAllCages,
+	getCageById
 };
 
 function getAllCages() {
@@ -21,5 +22,23 @@ function getAllCages() {
 			combinedCageData.push({ ...cageItem, altScreenOptions: combinedAltScreens });
 		}
 		return combinedCageData;
+	});
+}
+
+function getCageById(Id) {
+	const altScreens = db('altScreens').select('id', 'altScreenName', 'price', 'cageId');
+	const cage = db('cages').where({ id: Id }).select('id', 'cageType', 'cagePart', 'price', 'imageURL');
+
+	return Promise.all([ cage, altScreens ]).then((result) => {
+		let otherScreens = [];
+
+		for (let screen of result[1]) {
+			if (screen.cageId === result[0][0].id) {
+				otherScreens.push(screen);
+			}
+		}
+
+		result[0][0].altScreenOptions = otherScreens;
+		return result[0][0];
 	});
 }

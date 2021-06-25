@@ -15,4 +15,17 @@ router.get('/all', (req, res) => {
 		});
 });
 
+router.get('/:id', (req, res) => {
+	const cageId = req.params.id;
+
+	cageDB
+		.getCageById(cageId)
+		.then((cage) => {
+			res.status(200).json(cage);
+		})
+		.catch((err) => {
+			res.status(500).json({ err, error: 'Failed to load Cage by ID.' });
+		});
+});
+
 module.exports = router;
