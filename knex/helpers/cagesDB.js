@@ -4,7 +4,8 @@ module.exports = {
 	getAllCages,
 	getCageById,
 	updateCageById,
-	updateAltScreenById
+	updateAltScreenById,
+	addAltScreenToCage
 };
 
 function getAllCages() {
@@ -59,5 +60,13 @@ function updateAltScreenById(Id, newData) {
 
 	return Promise.all([ altScreen ]).then((result) => {
 		return result;
+	});
+}
+
+function addAltScreenToCage(cageId, screenData) {
+	console.log(cageId, screenData);
+	return db('altScreens').insert({
+		...screenData,
+		cageId: cageId
 	});
 }

@@ -57,4 +57,18 @@ router.put('/screen/:screenId/update', (req, res) => {
 		});
 });
 
+router.post('/:cageId/screen/post', (req, res) => {
+	const cageId = req.params.cageId;
+	const screenData = req.body;
+
+	cageDB
+		.addAltScreenToCage(cageId, screenData)
+		.then((altScreen) => {
+			res.status(200).json(1);
+		})
+		.catch((err) => {
+			res.status(500).json({ err, error: 'Failed to add alt screen to cage info.' });
+		});
+});
+
 module.exports = router;
