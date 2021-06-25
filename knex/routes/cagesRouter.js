@@ -71,4 +71,17 @@ router.post('/:cageId/screen/post', (req, res) => {
 		});
 });
 
+router.delete('/screen/:screenId/delete', (req, res) => {
+	const screenId = req.params.screenId;
+
+	cageDB
+		.deleteAltScreenFromCage(screenId)
+		.then((removedScreen) => {
+			res.status(200).json(removedScreen);
+		})
+		.catch((err) => {
+			res.status(500).json({ err, error: 'Failed to remove alt screen.' });
+		});
+});
+
 module.exports = router;
