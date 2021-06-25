@@ -47,12 +47,22 @@ exports.seed = function(knex) {
 			},
 			{
 				cageType: 'Gable',
-				cagePart: 'Riser',
+				cagePart: 'Low Riser',
 				price: 70
 			},
 			{
 				cageType: 'Gable',
-				cagePart: 'Roof',
+				cagePart: 'High Riser',
+				price: 70
+			},
+			{
+				cageType: 'Gable',
+				cagePart: 'Low Roof',
+				price: 80
+			},
+			{
+				cageType: 'Gable',
+				cagePart: 'High Roof',
 				price: 80
 			}
 		]);
