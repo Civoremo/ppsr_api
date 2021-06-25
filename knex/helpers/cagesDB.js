@@ -2,7 +2,9 @@ const db = require('../knex.js');
 
 module.exports = {
 	getAllCages,
-	getCageById
+	getCageById,
+	updateCageById,
+	updateAltScreenById
 };
 
 function getAllCages() {
@@ -40,5 +42,22 @@ function getCageById(Id) {
 
 		result[0][0].altScreenOptions = otherScreens;
 		return result[0][0];
+	});
+}
+
+function updateCageById(Id, newData) {
+	let cage = db('cages').where({ id: Id }).update(newData);
+
+	return Promise.all([ cage ]).then((result) => {
+		console.log(newData);
+		return result;
+	});
+}
+
+function updateAltScreenById(Id, newData) {
+	let altScreen = db('altScreens').where({ id: Id }).update({ price: newData.price });
+
+	return Promise.all([ altScreen ]).then((result) => {
+		return result;
 	});
 }
