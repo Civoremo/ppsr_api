@@ -1,8 +1,7 @@
 const { express } = require('../../configMW/configMW.js');
-const { protected } = require('../middleware/protectedMW.js');
+const { adminProtected } = require('../middleware/protectedMW.js');
 
 const cageDB = require('../helpers/cagesDB.js');
-const { route } = require('./usersRouter.js');
 const router = express.Router();
 
 router.get('/all', (req, res) => {
@@ -16,7 +15,7 @@ router.get('/all', (req, res) => {
 		});
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', adminProtected, (req, res) => {
 	const cageId = req.params.id;
 
 	cageDB
@@ -29,7 +28,7 @@ router.get('/:id', (req, res) => {
 		});
 });
 
-router.put('/:id/cage/update', (req, res) => {
+router.put('/:id/cage/update', adminProtected, (req, res) => {
 	const cageId = req.params.id;
 	const newData = req.body;
 
@@ -43,7 +42,7 @@ router.put('/:id/cage/update', (req, res) => {
 		});
 });
 
-router.put('/screen/:screenId/update', (req, res) => {
+router.put('/screen/:screenId/update', adminProtected, (req, res) => {
 	const screenId = req.params.screenId;
 	const newData = req.body;
 
@@ -57,7 +56,7 @@ router.put('/screen/:screenId/update', (req, res) => {
 		});
 });
 
-router.post('/:cageId/screen/post', (req, res) => {
+router.post('/:cageId/screen/post', adminProtected, (req, res) => {
 	const cageId = req.params.cageId;
 	const screenData = req.body;
 
@@ -71,7 +70,7 @@ router.post('/:cageId/screen/post', (req, res) => {
 		});
 });
 
-router.delete('/screen/:screenId/delete', (req, res) => {
+router.delete('/screen/:screenId/delete', adminProtected, (req, res) => {
 	const screenId = req.params.screenId;
 
 	cageDB
