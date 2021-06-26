@@ -3,6 +3,7 @@ require('dotenv').config();
 const { cors, helmet, morgan, express } = require('../configMW/configMW.js');
 
 // add routes here
+const startRouter = require('../knex/routes/startRouter.js');
 const usersRoute = require('../knex/routes/usersRouter.js');
 const cagesRouter = require('../knex/routes/cagesRouter.js');
 
@@ -14,6 +15,7 @@ server.use(express.json());
 server.use(cors());
 
 // set up routes here
+server.use('/', startRouter);
 server.use('/users', usersRoute);
 server.use('/cages', cagesRouter);
 
