@@ -1,5 +1,5 @@
-const db = require("../knex.js");
-const { sgMail } = require("../../configMW/configMW.js");
+const db = require('../knex.js');
+const { sgMail } = require('../../configMW/configMW.js');
 
 module.exports = {
 	getAllUsers,
@@ -10,69 +10,76 @@ module.exports = {
 	updateUser,
 	confirmUser,
 	getUserInfoToConfirmKey,
-	sendConfirmationKey,
+	sendConfirmationKey
 };
 
 function getAllUsers() {
-	return db("users").select(
-		"id",
-		"firstName",
-		"lastName",
-		"userRole",
-		"email",
-		"password",
-		"activeUser",
-		"activationKey"
+	return db('users').select(
+		'id',
+		'firstName',
+		'lastName',
+		'userRole',
+		'email',
+		'password',
+		'activeUser',
+		'activationKey'
 	);
 }
 
 function registerUser(user) {
-	return db("users").insert(user);
+	const allUsers = db('users').select();
+	const reachedAdminCount = 0;
+
+	return Promise.all([ allUsers ]).then((result) => {
+		for (let user of result[0]) {
+			if (user.userRole === 'admin') {
+				reachedAdminCount++;
+			}
+		}
+
+		if (user.userRole !== 'admin') {
+			return db('users').insert(user);
+		} else if (user.userRole === 'admin' && reachedAdminCount < 2) {
+			return db('users').insert(user);
+		} else {
+			return 'Something went wrong with user registration!';
+		}
+	});
 }
 
 function loginUser(user) {
-	return db("users")
-		.where({ email: user.email })
-		.first();
+	return db('users').where({ email: user.email }).first();
 }
 
 function getUserInfo(user) {
-	return db("users")
+	return db('users')
 		.select(
-			"id",
-			"firstName",
-			"lastName",
-			"userRole",
-			"email",
-			"password",
-			"activeUser"
+			'id',
+			'firstName',
+			'lastName',
+			'userRole',
+			'email',
+			'password',
+			'activeUser'
 			// "activationKey"
 		)
 		.where({ email: user.email });
 }
 
 function getUserInfoToConfirmKey(user) {
-	return db("users")
-		.select("id", "activeUser", "activationKey")
-		.where({ email: user.email });
+	return db('users').select('id', 'activeUser', 'activationKey').where({ email: user.email });
 }
 
 function deleteUser(user) {
-	return db("users")
-		.where({ email: user.email })
-		.del();
+	return db('users').where({ email: user.email }).del();
 }
 
 function updateUser(user, updatedUserInfo) {
-	return db("users")
-		.where({ id: user.id })
-		.update(updatedUserInfo);
+	return db('users').where({ id: user.id }).update(updatedUserInfo);
 }
 
 function confirmUser(user) {
-	return db("users")
-		.where({ email: user.email })
-		.update({ activeUser: true });
+	return db('users').where({ email: user.email }).update({ activeUser: true });
 }
 
 function sendConfirmationKey(user) {
@@ -82,12 +89,12 @@ function sendConfirmationKey(user) {
 	const msg = {
 		to: `${user.email}`,
 		from: `ppsr@ppscreens.com`,
-		subject: "PPSR Confirmation Key",
+		subject: 'PPSR Confirmation Key',
 		html: `Thank you for registering with Pool & Patio Screen Repair website.<br>
 		If this email was not meant for you, please ignore its contents and delete.<br><br>
 		Your Confirmation Number:<br>
 		<strong>${user.activationKey}</strong>
-		`,
+		`
 	};
 
 	return sgMail.send(msg);
