@@ -56,25 +56,21 @@ router.post("/register", (req, res) => {
           const sendEmail = userDB
             .sendConfirmationKey(creds)
             .then(result => {
-              res
-                .status(201)
-                .json({
-                  registered: 1,
-                  message: "Confirmation key email sent.",
-                });
+              res.status(201).json({
+                registered: 1,
+                message: "Confirmation key email sent.",
+              });
             })
             .catch(err => {
               res.status(500).json({ err, error: "Confirmation not sent" });
             });
         })
         .catch(err => {
-          res
-            .status(500)
-            .json({
-              err: err,
-              error: "Registration Failed",
-              message: "Email already exists",
-            });
+          res.status(500).json({
+            err: err,
+            error: "Registration Failed",
+            message: "Email already exists",
+          });
         });
     } else {
       res.status(500).json({ error: "Missing input fields" });
@@ -89,12 +85,14 @@ router.post("/login", (req, res) => {
   userDB
     .getUserInfo(creds)
     .then(foundUser => {
-      console.log(foundUser);
+      // console.log(foundUser);
       if (foundUser.length === 0) {
         res.status(204).json("No user found");
       }
       // console.log("USER: ", foundUser[0].activeUser);
-      else if (foundUser[0].activeUser === true) {
+    })
+    .then(foundUser => {
+      if (foundUser[0].activeUser === true) {
         // console.log("active user status is TRUE");
         userDB
           .loginUser(creds)
