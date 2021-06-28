@@ -25,7 +25,7 @@ function getAllUsers() {
       "lastName",
       "userRole",
       "email",
-      "password",
+      // "password",
       "activeUser"
 
       //   'activationKey'
@@ -80,7 +80,14 @@ function getUserInfoToConfirmKey(user) {
 }
 
 function deleteUser(user) {
-  return db("users").where({ email: user.email }).del();
+  // console.log("user token", user.decodedToken);
+  if (user.decodedToken.userRole === "admin") {
+    return db("users").where({ email: user.body.email }).del();
+  } else if (user.decodedToken.userRole === "user") {
+    return db("users").where({ email: user.decodedToken.email }).del();
+  } else {
+    return "Failed to delete user";
+  }
 }
 
 function updateUser(user, updatedUserInfo) {

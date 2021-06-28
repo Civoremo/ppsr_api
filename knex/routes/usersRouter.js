@@ -13,14 +13,14 @@ function getRandomActivationKey(min, max) {
   return Math.floor(Math.random() * (9876 - 1234)) + 1234;
 }
 
-router.get("/all", adminProtected, (req, res) => {
+router.get("/all", (req, res) => {
   userDB
     .getAllUsers()
     .then(users => {
       res.status(200).json(users);
     })
     .catch(err => {
-      res.status(500).json(err, { message: "Failed to load users" });
+      res.status(500).json({ err, message: "Failed to load users" });
     });
 });
 
@@ -33,7 +33,7 @@ router.get("/user", (req, res) => {
       res.status(200).json(user);
     })
     .catch(err => {
-      res.status(500).json(err, { message: "Failed to load user info" });
+      res.status(500).json({ err, message: "Failed to load user info" });
     });
 });
 
@@ -180,11 +180,12 @@ router.post("/login", (req, res) => {
 
 router.delete("/delete", protected, (req, res) => {
   // console.log(req.decodedToken);
+  // console.log("REQ", req);
   userDB
-    .deleteUser(req.decodedToken)
+    .deleteUser(req)
     .then(count => {
       if (count === 1) {
-        res.status(200).json({ count, delted: 1 });
+        res.status(200).json({ count, deleted: 1 });
       } else {
         res
           .status(404)
