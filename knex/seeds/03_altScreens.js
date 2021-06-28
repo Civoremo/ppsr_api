@@ -9,7 +9,7 @@ exports.seed = function (knex) {
       return knex("altScreens").insert([
         // Dome Door
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 1,
         },
@@ -30,7 +30,7 @@ exports.seed = function (knex) {
         },
         // Dome Bottom
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 2,
         },
@@ -51,7 +51,7 @@ exports.seed = function (knex) {
         },
         // Dome Side
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 3,
         },
@@ -67,18 +67,23 @@ exports.seed = function (knex) {
         },
         // Dome Riser
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 4,
         },
         {
           altScreenName: "NoSeeUms Screen",
+          price: 60,
+          cageId: 4,
+        },
+        {
+          altScreenName: "Solar Screen",
           price: 60,
           cageId: 4,
         },
         // Dome Roof
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 5,
         },
@@ -87,11 +92,16 @@ exports.seed = function (knex) {
           price: 60,
           cageId: 5,
         },
+        {
+          altScreenName: "Solar Screen",
+          price: 60,
+          cageId: 4,
+        },
 
         ////////////////////
         // Gable Door
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 6,
         },
@@ -112,7 +122,7 @@ exports.seed = function (knex) {
         },
         // Gable Bottom
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 7,
         },
@@ -133,7 +143,7 @@ exports.seed = function (knex) {
         },
         // Gable Side
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 8,
         },
@@ -154,7 +164,7 @@ exports.seed = function (knex) {
         },
         // Gable Low Riser
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 9,
         },
@@ -162,10 +172,15 @@ exports.seed = function (knex) {
           altScreenName: "NoSeeUms Screen",
           price: 60,
           cageId: 9,
+        },
+        {
+          altScreenName: "Solar Screen",
+          price: 60,
+          cageId: 4,
         },
         // Gable High Riser
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 10,
         },
@@ -173,10 +188,15 @@ exports.seed = function (knex) {
           altScreenName: "NoSeeUms Screen",
           price: 60,
           cageId: 10,
+        },
+        {
+          altScreenName: "Solar Screen",
+          price: 60,
+          cageId: 4,
         },
         // Gable Low Roof
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 11,
         },
@@ -184,10 +204,15 @@ exports.seed = function (knex) {
           altScreenName: "NoSeeUms Screen",
           price: 60,
           cageId: 11,
+        },
+        {
+          altScreenName: "Solar Screen",
+          price: 60,
+          cageId: 4,
         },
         // Gable High Roof
         {
-          altScreenName: "Tuffscreen",
+          altScreenName: "TuffScreen",
           price: 60,
           cageId: 12,
         },
@@ -195,6 +220,11 @@ exports.seed = function (knex) {
           altScreenName: "NoSeeUms Screen",
           price: 60,
           cageId: 12,
+        },
+        {
+          altScreenName: "Solar Screen",
+          price: 60,
+          cageId: 4,
         },
       ]);
     });

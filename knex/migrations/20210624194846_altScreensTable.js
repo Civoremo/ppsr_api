@@ -9,6 +9,7 @@ exports.up = function (knex, Promise) {
         "Florida Glass",
         "NoSeeUms Screen",
         "Pet Screen",
+        "Solar Screen",
       ])
       .notNullable();
     tbl.integer("price").notNullable();
