@@ -13,7 +13,7 @@ function getRandomActivationKey(min, max) {
   return Math.floor(Math.random() * (9876 - 1234)) + 1234;
 }
 
-router.get("/all", adminProtected, (req, res) => {
+router.get("/all", (req, res) => {
   userDB
     .getAllUsers()
     .then(users => {
