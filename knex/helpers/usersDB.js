@@ -25,7 +25,7 @@ function getAllUsers() {
       "lastName",
       "userRole",
       "email",
-      "password",
+      // "password",
       "activeUser"
 
       //   'activationKey'
