@@ -181,7 +181,7 @@ router.post("/login", (req, res) => {
 router.delete("/delete", protected, (req, res) => {
   // console.log(req.decodedToken);
   userDB
-    .deleteUser(req.decodedToken)
+    .deleteUser(req)
     .then(count => {
       if (count === 1) {
         res.status(200).json({ count, delted: 1 });

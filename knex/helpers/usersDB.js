@@ -80,7 +80,13 @@ function getUserInfoToConfirmKey(user) {
 }
 
 function deleteUser(user) {
-  return db("users").where({ email: user.email }).del();
+  if (user.decodedToken.userRole === "admin") {
+    return db("users").where({ email: user.body.email }).del();
+  } else if (user.decodedToken.userRole === "user") {
+    return db("users").where({ email: user.decodedToken.email }).del();
+  } else {
+    return "Failed to delete user";
+  }
 }
 
 function updateUser(user, updatedUserInfo) {
