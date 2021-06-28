@@ -11,7 +11,7 @@ const localPg = {
 };
 
 const pg = require("pg");
-pg.defaults.ssl = true;
+pg.defaults.ssl = false;
 
 const dbConnection = process.env.DATABASE_URL;
 
