@@ -20,7 +20,7 @@ router.get("/all", (req, res) => {
       res.status(200).json(users);
     })
     .catch(err => {
-      res.status(500).json(err, { message: "Failed to load users" });
+      res.status(500).json({ err, message: "Failed to load users" });
     });
 });
 
@@ -33,7 +33,7 @@ router.get("/user", (req, res) => {
       res.status(200).json(user);
     })
     .catch(err => {
-      res.status(500).json(err, { message: "Failed to load user info" });
+      res.status(500).json({ err, message: "Failed to load user info" });
     });
 });
 
