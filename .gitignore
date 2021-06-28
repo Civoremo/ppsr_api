@@ -81,5 +81,5 @@ typings/
 
 DS_Store
 node_modules
-/knex/seeds
-knex/seeds
+# /knex/seeds
+# knex/seeds
