@@ -184,7 +184,7 @@ router.delete("/delete", protected, (req, res) => {
     .deleteUser(req)
     .then(count => {
       if (count === 1) {
-        res.status(200).json({ count, delted: 1 });
+        res.status(200).json({ count, deleted: 1 });
       } else {
         res
           .status(404)
