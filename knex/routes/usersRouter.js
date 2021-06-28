@@ -180,7 +180,7 @@ router.post("/login", (req, res) => {
 
 router.delete("/delete", protected, (req, res) => {
   // console.log(req.decodedToken);
-  console.log("REQ", req);
+  // console.log("REQ", req);
   userDB
     .deleteUser(req)
     .then(count => {

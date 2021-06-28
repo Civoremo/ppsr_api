@@ -32,7 +32,7 @@ function adminProtected(req, res, next) {
       if (err) {
         res.status(401).json({ message: "Invalid Token" });
       } else {
-        if (decodedToken.userRole === "admini") {
+        if (decodedToken.userRole === "admin") {
           // console.log(decodedToken.userRole);
           req.decodedToken = decodedToken;
           next();
