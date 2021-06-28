@@ -80,6 +80,7 @@ function getUserInfoToConfirmKey(user) {
 }
 
 function deleteUser(user) {
+  console.log("user token", user.decodedToken);
   if (user.decodedToken.userRole === "admini") {
     return db("users").where({ email: user.body.email }).del();
   } else if (user.decodedToken.userRole === "user") {
