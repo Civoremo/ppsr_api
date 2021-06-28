@@ -89,6 +89,7 @@ router.post("/login", (req, res) => {
       if (foundUser.length === 0) {
         res.status(204).json("No user found");
       }
+      return foundUser;
       // console.log("USER: ", foundUser[0].activeUser);
     })
     .then(foundUser => {
