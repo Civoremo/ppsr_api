@@ -95,7 +95,7 @@ exports.seed = function (knex) {
         {
           altScreenName: "Solar Screen",
           price: 60,
-          cageId: 4,
+          cageId: 5,
         },
 
         ////////////////////
@@ -176,7 +176,7 @@ exports.seed = function (knex) {
         {
           altScreenName: "Solar Screen",
           price: 60,
-          cageId: 4,
+          cageId: 9,
         },
         // Gable High Riser
         {
@@ -192,7 +192,7 @@ exports.seed = function (knex) {
         {
           altScreenName: "Solar Screen",
           price: 60,
-          cageId: 4,
+          cageId: 10,
         },
         // Gable Low Roof
         {
@@ -208,7 +208,7 @@ exports.seed = function (knex) {
         {
           altScreenName: "Solar Screen",
           price: 60,
-          cageId: 4,
+          cageId: 11,
         },
         // Gable High Roof
         {
@@ -224,7 +224,7 @@ exports.seed = function (knex) {
         {
           altScreenName: "Solar Screen",
           price: 60,
-          cageId: 4,
+          cageId: 12,
         },
       ]);
     });
