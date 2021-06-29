@@ -6,6 +6,7 @@ module.exports = {
   getAllCages,
   getCageById,
   updateCageById,
+  deleteCageById,
   updateAltScreenById,
   addAltScreenToCage,
   deleteAltScreenFromCage,
@@ -70,8 +71,16 @@ function updateCageById(Id, newData) {
   let cage = db("cages").where({ id: Id }).update(newData);
 
   return Promise.all([cage]).then(result => {
-    console.log(newData);
+    // console.log(newData);
     return result;
+  });
+}
+
+function deleteCageById(Id) {
+  const cageToDelete = db("cages").where({ id: Id }).del();
+
+  return Promise.all([cageToDelete]).then(result => {
+    return result[0];
   });
 }
 

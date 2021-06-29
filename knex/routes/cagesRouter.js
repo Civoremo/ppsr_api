@@ -48,6 +48,29 @@ router.put("/:id/cage/update", adminProtected, (req, res) => {
     });
 });
 
+router.delete("/delete", adminProtected, (req, res) => {
+  const cageId = req.body.cageId;
+
+  cageDB
+    .deleteCageById(cageId)
+    .then(count => {
+      console.log(count);
+      if (count === 1) {
+        res.status(200).json({ count, deleted: 1 });
+      } else {
+        res.status(404).json({
+          count,
+          deleted: 0,
+          message: " - Cage Part failed to delete",
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ deleted: 2, error: "Failed to delete cage part" });
+    });
+});
+
 router.put("/screen/:screenId/update", adminProtected, (req, res) => {
   const screenId = req.params.screenId;
   const newData = req.body;
