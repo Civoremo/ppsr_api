@@ -34,6 +34,20 @@ router.get("/:id", adminProtected, (req, res) => {
     });
 });
 
+router.post("/:id/post", adminProtected, (req, res) => {
+  const cageId = req.params.id;
+  const cageData = req.body;
+
+  cageDB
+    .addCagePart(cageId, cageData)
+    .then(newCage => {
+      res.status(200).json(newCage);
+    })
+    .catch(err => {
+      res.status(500).json({ err, error: "Failed to add new Cage Part" });
+    });
+});
+
 router.put("/:id/cage/update", adminProtected, (req, res) => {
   const cageId = req.params.id;
   const newData = req.body;

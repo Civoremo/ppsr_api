@@ -5,6 +5,7 @@ const db = require("../knex.js");
 module.exports = {
   getAllCages,
   getCageById,
+  addCagePart,
   updateCageById,
   deleteCageById,
   updateAltScreenById,
@@ -67,12 +68,24 @@ function getCageById(Id) {
   });
 }
 
+function addCagePart(cageData) {
+  let newCage = db("cages").insert(cageData);
+
+  return Promise.all([newCage])
+    .then(result => {
+      console.log("new cage result", result);
+    })
+    .catch(err => {
+      console.log("new cage error", err);
+    });
+}
+
 function updateCageById(Id, newData) {
   let cage = db("cages").where({ id: Id }).update(newData);
 
   return Promise.all([cage]).then(result => {
     // console.log(newData);
-    return result;
+    return result[0];
   });
 }
 
@@ -90,7 +103,7 @@ function updateAltScreenById(Id, newData) {
     .update({ price: newData.price });
 
   return Promise.all([altScreen]).then(result => {
-    return result;
+    return result[0];
   });
 }
 
@@ -111,6 +124,7 @@ function deleteAltScreenFromCage(screenId) {
   const deletedScreen = db("altScreens").where({ id: screenId }).del();
 
   return Promise.all([deletedScreen]).then(result => {
+    console.log(result);
     return result[0];
   });
 }
