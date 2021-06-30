@@ -107,7 +107,7 @@ function addAltScreenToCage(cageId, screenData) {
   });
 
   return Promise.all([newAltScreen]).then(result => {
-    console.log(result);
+    // console.log(result);
     return result;
   });
 }
@@ -116,7 +116,7 @@ function deleteAltScreenFromCage(screenId) {
   const deletedScreen = db("altScreens").where({ id: screenId }).del();
 
   return Promise.all([deletedScreen]).then(result => {
-    console.log(result);
+    // console.log(result);
     return result[0];
   });
 }
