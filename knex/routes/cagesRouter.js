@@ -34,14 +34,13 @@ router.get("/:id", adminProtected, (req, res) => {
     });
 });
 
-router.post("/:id/post", adminProtected, (req, res) => {
-  const cageId = req.params.id;
+router.post("/post", adminProtected, (req, res) => {
   const cageData = req.body;
 
   cageDB
-    .addCagePart(cageId, cageData)
+    .addCagePart(cageData)
     .then(newCage => {
-      res.status(200).json(newCage);
+      res.status(200).json(1);
     })
     .catch(err => {
       res.status(500).json({ err, error: "Failed to add new Cage Part" });

@@ -69,15 +69,7 @@ function getCageById(Id) {
 }
 
 function addCagePart(cageData) {
-  let newCage = db("cages").insert(cageData);
-
-  return Promise.all([newCage])
-    .then(result => {
-      console.log("new cage result", result);
-    })
-    .catch(err => {
-      console.log("new cage error", err);
-    });
+  return db("cages").insert(cageData);
 }
 
 function updateCageById(Id, newData) {
