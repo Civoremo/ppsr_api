@@ -52,16 +52,16 @@ router.post("/register", (req, res) => {
       userDB
         .getUserInfo(creds)
         .then(foundUser => {
-          console.log(foundUser[0]);
+          // console.log(foundUser[0]);
           if (foundUser[0].email === creds.email) {
-            console.log("user already exists");
+            // console.log("user already exists");
             res
               .status(210)
               .json({ registered: 2, message: "Email already exists." });
           }
         })
         .catch(err => {
-          console.log("new user registering");
+          // console.log("new user registering");
           userDB
             .registerUser(creds)
             .then(ids => {
@@ -71,7 +71,7 @@ router.post("/register", (req, res) => {
               const sendEmail = userDB
                 .sendConfirmationKey(creds)
                 .then(result => {
-                  console.log(result);
+                  // console.log(result);
                   res.status(201).json({
                     confirmation: 1,
                     message: "Check your inbox for the confirmation key.",
