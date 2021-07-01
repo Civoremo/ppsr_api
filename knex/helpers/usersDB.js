@@ -35,7 +35,7 @@ function getAllUsers() {
 
 function registerUser(user) {
   const allUsers = db("users").select();
-  const reachedAdminCount = 0;
+  let reachedAdminCount = 0;
 
   return Promise.all([allUsers]).then(result => {
     for (let user of result[0]) {
