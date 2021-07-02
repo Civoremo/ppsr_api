@@ -8,6 +8,7 @@ const { cors, helmet, morgan, express } = require("../configMW/configMW.js");
 const startRouter = require("../knex/routes/startRouter.js");
 const usersRoute = require("../knex/routes/usersRouter.js");
 const cagesRouter = require("../knex/routes/cagesRouter.js");
+const galleryRouter = require("../knex/routes/galleryRouter.js");
 
 const server = express();
 
@@ -20,6 +21,7 @@ server.use(cors());
 server.use("/", startRouter);
 server.use("/users", usersRoute);
 server.use("/cages", cagesRouter);
+server.use("/gallery", galleryRouter);
 
 server.get("/", (req, res) => {
   res.send("sanity check; server connected");
