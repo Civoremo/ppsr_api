@@ -20,14 +20,14 @@ router.get("/all", (req, res) => {
 });
 
 router.post("/post", adminProtected, (req, res) => {
-  const imageUrl = req.body.imageUrl;
+  const imageUrl = req.body;
   galleryDB
     .galleryPost(imageUrl)
     .then(result => {
-      res.status(200).json(result);
+      res.status(200).json(1);
     })
     .catch(err => {
-      res.status(500).json({ err, error: "Failed to save imgage to gallery." });
+      res.status(500).json({ err, error: "Failed to save image to gallery." });
     });
 });
 
@@ -36,7 +36,15 @@ router.delete("/delete", adminProtected, (req, res) => {
   galleryDB
     .galleryDelete(imageId)
     .then(result => {
-      res.status(200).json(result);
+      if (result === 1) {
+        res.status(200).json(result);
+      } else {
+        res.status(404).json({
+          result,
+          deleted: 0,
+          message: " - Gallery image failed to delete, image ID not found.",
+        });
+      }
     })
     .catch(err => {
       res
