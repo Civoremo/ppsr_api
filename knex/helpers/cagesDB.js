@@ -100,7 +100,7 @@ function updateAltScreenById(Id, newData) {
 }
 
 function addAltScreenToCage(cageId, screenData) {
-  console.log(cageId, screenData);
+  // console.log(cageId, screenData);
   const newAltScreen = db("altScreens").insert({
     ...screenData,
     cageId: cageId,

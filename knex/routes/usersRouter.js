@@ -255,7 +255,7 @@ router.put("/confirmUser", (req, res) => {
 
 router.post("/estimate", (req, res) => {
   const info = req.body;
-  console.log("estimate: " + JSON.stringify(info));
+  // console.log("estimate: " + JSON.stringify(info));
 
   userDB
     .sendEstimateRequest(info)
@@ -269,8 +269,8 @@ router.post("/estimate", (req, res) => {
 
 router.get("/recaptchaPPSR", (req, res) => {
   const info = req.body;
-  console.log("REQ " + JSON.stringify(info));
-  console.log("recaptcha post body: " + `${info.response}`);
+  // console.log("REQ " + JSON.stringify(info));
+  // console.log("recaptcha post body: " + `${info.response}`);
 
   // userDB
   // 	.recatpchaRequest(info)
@@ -313,7 +313,7 @@ router.get("/recaptchaPPSR", (req, res) => {
     }),
   })
     .then(res => {
-      console.log("success " + JSON.stringify(res));
+      // console.log("success " + JSON.stringify(res));
       res.status(200).json({ result: res, request: "sent" });
     })
     .catch(err => {

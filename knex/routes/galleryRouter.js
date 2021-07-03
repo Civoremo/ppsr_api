@@ -10,7 +10,7 @@ router.get("/all", (req, res) => {
   galleryDB
     .getAllGallery()
     .then(gallery => {
-      console.log(gallery);
+      // console.log(gallery);
       res.status(200).json(gallery);
     })
     .catch(err => {
