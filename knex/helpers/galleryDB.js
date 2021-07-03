@@ -12,7 +12,7 @@ function getAllGallery() {
   const gallery = db("gallery").select();
 
   return Promise.all([gallery]).then(result => {
-    console.log("gallery all", result[0]);
+    // console.log("gallery all", result[0]);
     return result[0];
   });
 }

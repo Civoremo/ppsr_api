@@ -67,7 +67,7 @@ router.delete("/delete", adminProtected, (req, res) => {
   cageDB
     .deleteCageById(cageId)
     .then(count => {
-      console.log(count);
+      // console.log(count);
       if (count === 1) {
         res.status(200).json({ count, deleted: 1 });
       } else {
