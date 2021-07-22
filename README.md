@@ -6,23 +6,23 @@
 
 ### USER
 
--[Register](#registerUser) || -[Login](#loginUser) || -[Update](#updateUser) || -[Delete](#deleteUser) || -[Confirm User](#confirmUser)
+[Register](#registerUser) || [Login](#loginUser) || [Update](#updateUser) || [Delete](#deleteUser) || [Confirm User](#confirmUser)
 
--[Get All](#getAllUsers) || -[Get Specific](#getUserSpecific)
+[Get All](#getAllUsers) || [Get Specific](#getUserSpecific)
 
 ### ENCLOSURE
 
--[Register](#registerEnclosure) || -[Update](#updateEnclosure) || -[Delete](#deleteEnclosure)
+[Register](#registerEnclosure) || [Update](#updateEnclosure) || [Delete](#deleteEnclosure)
 
--[Get All](#getAllEnclosures) || -[Get By ID](#getEnclosureById)
+[Get All](#getAllEnclosures) || [Get By ID](#getEnclosureById)
 
 ### ALTERNATIVE MATERIAL
 
--[Register](#registerAltMaterial) || -[Update](#updateAltMaterial) || -[Delete](#deleteAltMaterial)
+[Register](#registerAltMaterial) || [Update](#updateAltMaterial) || [Delete](#deleteAltMaterial)
 
 ### GALLERY
 
--[Register](#registerGallery) || -[Delete](#deleteGallery)
+[Register](#registerGallery) || [Delete](#deleteGallery)
 
 [Get All](#getAllGallery)
 
